@@ -19,7 +19,27 @@ const __dirname = path.dirname(__filename); // Fixed the __dirname syntax
 
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
+
+const allowedOrigins = [
+    "http://localhost:5173", // Local development
+    process.env.FRONTEND_URL, // Hosted frontend (from .env)
+].filter(Boolean); 
+
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Allow cookies & authentication headers
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 app.use(upload());
 app.use(cookieParser());
 
