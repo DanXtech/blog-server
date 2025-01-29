@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename); // Get the current directory path
 
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
+app.use(cors());
 app.use(upload());
 app.use(cookieParser());
 
